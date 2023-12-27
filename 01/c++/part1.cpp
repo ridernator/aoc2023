@@ -42,7 +42,7 @@ std::vector<std::string> readFileToVector(const std::string& filename = INPUT) {
 
 int main() {
     auto lines = readFileToVector();
-    std::string numbers="1234567890";
+    std::string digits="1234567890";
     std::size_t firstPos;
     std::size_t secondPos;
     uint32_t firstNum;
@@ -50,8 +50,8 @@ int main() {
     uint32_t total = 0;
 
     for (const auto& line : lines) {
-        firstPos = line.find_first_of(numbers);
-        secondPos = line.find_last_of(numbers);
+        firstPos = line.find_first_of(digits);
+        secondPos = line.find_last_of(digits);
 
         firstNum = line[firstPos] - '0';
         secondNum = line[secondPos] - '0';
