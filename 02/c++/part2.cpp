@@ -1,8 +1,12 @@
+#include <algorithm>
+#include <cstdint>
+#include <cstdio>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <map>
 
 #define INPUT "../data/input"
 
@@ -40,5 +44,39 @@ std::vector<std::string> readFileToVector(const std::string& filename = INPUT) {
 }
 
 int main() {
-    return 0;
+    auto lines = readFileToVector();
+    uint32_t powerSum = 0;
+    std::map<std::string, uint32_t> handfullColours;
+
+    for (const auto& fullLine : lines) {
+        handfullColours["red"] = 0;
+        handfullColours["green"] = 0;
+        handfullColours["blue"] = 0;
+
+        std::string line = fullLine.substr(fullLine.find(":") + 1);
+        
+        std::string tempString;
+        std::istringstream lineIss(line);
+        std::vector<std::string> handfulls;
+
+        while (std::getline(lineIss, tempString, ';')) {
+            handfulls.push_back(tempString);
+        }
+
+        for (const auto& handfull : handfulls) {
+            std::istringstream handfullIss(handfull);
+
+            while (std::getline(handfullIss, tempString, ',')) {
+                uint32_t number;
+                char colour[8];
+                
+                sscanf(tempString.c_str(), " %u %s", &number, colour);
+                handfullColours[colour] = std::max(number, handfullColours[colour]);
+            }
+        }
+
+        powerSum += handfullColours["red"] * handfullColours["green"] * handfullColours["blue"];
+    }
+
+    std::cout << "Sum of powers is " << powerSum << std::endl;
 }
