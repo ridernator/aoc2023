@@ -1,3 +1,5 @@
+#include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -40,5 +42,46 @@ std::vector<std::string> readFileToVector(const std::string& filename = INPUT) {
 }
 
 int main() {
-    return 0;
+    const auto& rows = readFileToVector();
+    uint32_t winners[10];
+    uint32_t mine[25];
+    uint32_t totalCards = 0;
+    std::vector<uint32_t> multipliers;
+
+    for (std::size_t index = 0; index < rows.size(); ++index) {
+        multipliers.push_back(1);
+    }
+
+    for (std::size_t index = 0; index < rows.size(); ++index) {
+        uint32_t cardWinners = 0;
+        sscanf(rows[index].c_str(), "Card %u: %u %u %u %u %u %u %u %u %u %u | %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u",
+               &winners[0],
+               &winners[0], &winners[1], &winners[2], &winners[3], &winners[4],
+               &winners[5], &winners[6], &winners[7], &winners[8], &winners[9],
+               &mine[0], &mine[1], &mine[2], &mine[3], &mine[4],
+               &mine[5], &mine[6], &mine[7], &mine[8], &mine[9],
+               &mine[10], &mine[11], &mine[12], &mine[13], &mine[14],
+               &mine[15], &mine[16], &mine[17], &mine[18], &mine[19],
+               &mine[20], &mine[21], &mine[22], &mine[23], &mine[24]);
+
+        for (const auto& my : mine) {
+            for (const auto& winner : winners) {
+                if (my == winner) {
+                    ++cardWinners;
+
+                    break;
+                }
+            }
+        }
+
+        for (uint32_t winnerIndex = 0; winnerIndex < cardWinners; ++winnerIndex) {
+            multipliers[index + winnerIndex + 1] += multipliers[index];
+        }
+    }
+
+    for (const uint32_t multiplier : multipliers) {
+        totalCards += multiplier;
+    }
+
+    std::cout << "Total cards = " << totalCards << std::endl;
 }
