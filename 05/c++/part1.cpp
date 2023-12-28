@@ -77,6 +77,12 @@ uint64_t mapValue(const uint64_t input,
     return input;
 }
 
+void deleteMapping(const std::vector<Mapping*> mappings) {
+    for (const auto& mapping : mappings) {
+        delete mapping;
+    }
+}
+
 int main() {
     std::vector<uint64_t> seeds;
     std::string tempString;
@@ -116,18 +122,34 @@ int main() {
             populateMapping(rules, index + 1, humidityToLocationMappings);
         } 
     }
+            
+    uint64_t soil;
+    uint64_t fertilizer;
+    uint64_t water;
+    uint64_t light;
+    uint64_t temperature;
+    uint64_t humidity;
+    uint64_t location;
 
     for (const auto& seed : seeds) {
-        uint64_t soil = mapValue(seed, seedToSoilMappings);
-        uint64_t fertilizer = mapValue(soil, soilToFertilizerMappings);
-        uint64_t water = mapValue(fertilizer, fertilizerToWaterMappings);
-        uint64_t light = mapValue(water, waterToLightMappings);
-        uint64_t temperature = mapValue(light, lightToTemperatureMappings);
-        uint64_t humidity = mapValue(temperature, temperatureToHumidityMappings);
-        uint64_t location = mapValue(humidity, humidityToLocationMappings);
+        soil = mapValue(seed, seedToSoilMappings);
+        fertilizer = mapValue(soil, soilToFertilizerMappings);
+        water = mapValue(fertilizer, fertilizerToWaterMappings);
+        light = mapValue(water, waterToLightMappings);
+        temperature = mapValue(light, lightToTemperatureMappings);
+        humidity = mapValue(temperature, temperatureToHumidityMappings);
+        location = mapValue(humidity, humidityToLocationMappings);
 
         lowestLocation = std::min(lowestLocation, location);
     }
 
     std::cout << "Lowest location is " << lowestLocation << std::endl;
+
+    deleteMapping(seedToSoilMappings);
+    deleteMapping(soilToFertilizerMappings);
+    deleteMapping(fertilizerToWaterMappings);
+    deleteMapping(waterToLightMappings);
+    deleteMapping(lightToTemperatureMappings);
+    deleteMapping(temperatureToHumidityMappings);
+    deleteMapping(humidityToLocationMappings);
 }
