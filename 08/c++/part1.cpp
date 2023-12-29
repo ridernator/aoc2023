@@ -110,6 +110,10 @@ int main() {
     }
 
     std::cout << "Number of steps was " << stepCounter << std::endl;
+
+    for (const auto& node : nodes) {
+        delete node.second;
+    }
 }
 
 
