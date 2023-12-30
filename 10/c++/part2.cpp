@@ -384,25 +384,38 @@ int main() {
         }
     }
 
-    for (std::size_t y = 0; y < data.size(); ++y) {
-        for (std::size_t x = 0; x < data[0].size(); ++x) {
-            std::cout << data[y][x];
-        }
-        std::cout << std::endl;
-    }
-
     uint32_t enclosed = 0;
-    for (auto& row : data) {
+    for (const auto& row : data) {
         uint32_t inOuter = 0;
+        char lastVert = '|';
 
-        for (auto& datum : row) {
+        for (const auto& datum : row) {
             switch (datum) {
                 case '|':
-                case 'J':
                 case 'F':
-                case '7':
                 case 'L': {
                     inOuter = (inOuter + 1) % 2;
+                    lastVert = datum;
+
+                    break;
+                }
+
+                case 'J': {
+                    if ((lastVert != 'F')) {
+                        inOuter = (inOuter + 1) % 2;
+                    }
+
+                    lastVert = datum;
+
+                    break;
+                }
+
+                case '7': {
+                    if ((lastVert != 'L')) {
+                        inOuter = (inOuter + 1) % 2;
+                    }
+
+                    lastVert = datum;
 
                     break;
                 }
@@ -414,24 +427,10 @@ int main() {
                 default: {
                     enclosed += inOuter;
 
-                    if (inOuter == 1) {
-                        datum = 'I';
-                    } else {
-                        datum = 'O';
-                    }
-
                     break;
                 }
             }
         }
-    }
-
-    std::cout << std::endl;
-    for (std::size_t y = 0; y < data.size(); ++y) {
-        for (std::size_t x = 0; x < data[0].size(); ++x) {
-            std::cout << data[y][x];
-        }
-        std::cout << std::endl;
     }
 
     std::cout << "Number of enclosed tiles is " << enclosed << std::endl;
