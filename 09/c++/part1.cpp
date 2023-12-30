@@ -75,28 +75,14 @@ int main() {
         }
     }
 
-    for (const auto& row : data[2]) {
-        for (const auto& value : row) {
-            std::cout << " " << value;
-        }
-        std::cout << std::endl;
-    }
-
     int64_t sum = 0;
 
     for (auto& datum : data) {
         for (uint32_t index = datum.size() - 1; index > 0; --index) {
-            std::cout << "Index: " << index << std::endl;
             datum[index - 1].push_back(datum[index - 1][datum[index - 1].size() - 1] + datum[index][datum[index].size() - 1]);
         }
 
         sum += datum[0][datum[0].size() - 1];
-    }
-    for (const auto& row : data[2]) {
-        for (const auto& value : row) {
-            std::cout << " " << value;
-        }
-        std::cout << std::endl;
     }
 
     std::cout << "Sum of values is " << sum << std::endl;
