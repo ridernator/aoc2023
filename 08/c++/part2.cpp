@@ -154,6 +154,10 @@ int main() {
     for (const auto& node : nodes) {
         delete node.second;
     }
+
+    for (const auto& loopInfo : loopInfos) {
+        delete loopInfo;
+    }
 }
 
 
