@@ -60,10 +60,8 @@ uint32_t isMatch(const std::string& line,
     }
 
     std::string tempString = "." + line + ".";
-    std::replace(tempString.begin(), tempString.end(), '?', '.');
-
     std::string hashString;
-
+    
     for (const auto& position : positions) {
         hashString = ".";
         for (uint32_t i = 0; i < position; ++i) {
@@ -108,28 +106,37 @@ int main() {
     uint32_t sum = 0;
 
     for (std::size_t dataIndex = 0; dataIndex < data.size(); ++dataIndex) {
-        std::vector<std::size_t> indicies;
-        std::string lineCopy;
+        uint32_t numQ = std::count(data[dataIndex].begin(), data[dataIndex].end(), '?');
+        uint32_t numPositions = 0;
 
-        for (std::size_t charIndex = 0; charIndex < data[dataIndex].size(); ++charIndex) {
-            if (data[dataIndex][charIndex] == '?') {
-                indicies.push_back(charIndex);
-            }
+        for (const auto& position : positions[dataIndex]) {
+            numPositions += position;
         }
 
-        uint32_t maxLoop = std::pow(2, indicies.size());
+        numPositions -= std::count(data[dataIndex].begin(), data[dataIndex].end(), '#');
 
-        for (uint32_t loopIndex = 0; loopIndex < maxLoop; ++loopIndex) {
-            lineCopy = data[dataIndex];
+        std::string testString;
 
-            for (uint32_t subIndex = 0; subIndex < indicies.size(); ++subIndex) {
-                if ((loopIndex & (1 << subIndex)) > 0) {
-                    lineCopy[indicies[subIndex]] = '#';
+        for (uint32_t i = 0; i < numPositions; ++i) {
+            testString += '#';
+        }
+
+        for (uint32_t i = numPositions; i < numQ; ++i) {
+            testString += '.';
+        }
+
+        do {
+            std::string value = data[dataIndex];
+            std::size_t testIndex = 0;
+
+            for (auto& i : value) {
+                if (i == '?') {
+                    i = testString[testIndex++];
                 }
             }
 
-            sum += isMatch(lineCopy, positions[dataIndex]);
-        }
+            sum += isMatch(value, positions[dataIndex]);
+        } while (std::next_permutation(testString.begin(), testString.end()));
     }
 
     std::cout << "Sum of matches = " << sum << std::endl;
