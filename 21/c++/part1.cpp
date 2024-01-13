@@ -53,7 +53,7 @@ struct Pos {
 };
 
 void printGrid(const std::vector<std::string>& originalData,
-               const std::vector<std::vector<std::vector<uint32_t>>>& data,
+               const std::vector<std::vector<uint32_t>>& data,
                const uint32_t step) {
     std::cout << std::endl;
 
@@ -62,7 +62,7 @@ void printGrid(const std::vector<std::string>& originalData,
             if (originalData[y][x] == '#') {
                 std::cout << '#';
             } else {
-                if (std::find(data[y][x].begin(), data[y][x].end(), step) != data[y][x].end()) {
+                if (data[y][x] == step) {
                     std::cout << 'O';
                 } else {
                     std::cout << '.';
@@ -88,7 +88,7 @@ int main() {
     uint32_t numSteps = 64;
     auto originalData = readFileToVector();
 
-    std::vector<std::vector<std::vector<uint32_t>>> data;
+    std::vector<std::vector<uint32_t>> data;
     std::vector<Pos*> current;
     std::vector<Pos*> nexts;
 
@@ -96,7 +96,7 @@ int main() {
         data.push_back({});
 
         for (std::size_t x = 0; x < originalData[y].size(); ++x) {
-            data[y].push_back({});
+            data[y].push_back(0);
         }
     }
 
@@ -138,7 +138,7 @@ int main() {
                 }
             }
 
-            data[pos->y][pos->x].push_back(step);
+            data[pos->y][pos->x] = step;
             delete pos;
         }
 
@@ -156,7 +156,7 @@ int main() {
 
     for (std::size_t y = 0; y < data.size(); ++y) {
         for (std::size_t x = 0; x < data[y].size(); ++x) {
-            if (std::find(data[y][x].begin(), data[y][x].end(), numSteps) != data[y][x].end()) {
+            if (data[y][x] == numSteps) {
                 ++count;
             }
         }
